@@ -1,0 +1,15 @@
+.idea/
+**/appsettings.Development.json
+**/appsettings.local.json
+obj/
+bin/
+Debug/
+Release/
+**/obj/
+**/.DS_Store
+.env
+.venv
+*.user
+.vs/
+.fake
+
