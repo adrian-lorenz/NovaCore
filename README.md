@@ -18,6 +18,36 @@ NovaCore richtet sich an **Unternehmen, Behörden und anspruchsvolle Entwicklert
 
 ---
 
+## 🏗️ Deployment & Betriebsmodelle
+
+NovaCore ist eine **Web-Anwendung** und kann flexibel in unterschiedlichen Betriebsmodellen eingesetzt werden – je nach Sicherheitsanforderungen, Infrastruktur und Compliance-Vorgaben.
+
+### Unterstützte Betriebsarten
+
+- **Local / On-Premise**
+  - Betrieb vollständig innerhalb der eigenen Infrastruktur
+  - Keine externen Abhängigkeiten erforderlich
+  - Ideal für sensible Daten, Behörden & regulierte Umgebungen
+
+- **Private Cloud (Self-Hosted)**
+  - Deployment in einer eigenen Cloud-Umgebung (z. B. Azure, AWS, GCP)
+  - Volle Kontrolle über Daten, Netzwerke & Zugriffe
+  - Geeignet für skalierbare Enterprise-Setups
+
+- **Self-Managed Cloud**
+  - Betrieb in gemanagten Kubernetes- oder VM-Umgebungen
+  - Integration in bestehende CI/CD- und Security-Setups
+  - Kombinierbar mit lokalen und externen LLM-Providern
+
+Unabhängig vom Betriebsmodell bleibt NovaCore:
+- **datensouverän**
+- **vollständig kontrollierbar**
+- **ohne Vendor-Lock-in**
+
+> „Local“ bedeutet bei NovaCore **kontrolliert betrieben** – nicht „Desktop-Anwendung“.
+
+---
+
 ## 📋 Features
 
 ### 🤖 Agent Chunker
