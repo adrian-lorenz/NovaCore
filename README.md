@@ -200,8 +200,9 @@ cd NovaCore/src
 dotnet restore
 dotnet run
 
-## Setup SSL
-- soon
+## docker compose - soon..
+
+## Setup SSL - soon..
 ```
 
 ## 🧭 Roadmap / Coming Soon
@@ -241,8 +242,7 @@ dotnet run
 - **Jira Synchronisation**
   - Tickets, Kommentare & Beschreibungen
   - Projekt- & Label-basierte Wissensräume
-- **HubSpot API**
-  - CRM-Daten als kontextuelles Wissen für RAG
+
 
 ---
 
