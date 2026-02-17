@@ -39,91 +39,191 @@ NovaCore ist eine **Web-Anwendung** und kann flexibel in unterschiedlichen Betri
   - Integration in bestehende CI/CD- und Security-Setups
   - Kombinierbar mit lokalen und externen LLM-Providern
 
+- **Docker Compose**
+  - Fertige Docker-Compose-Konfigurationen für Infrastruktur (PostgreSQL + Qdrant) und Anwendung
+  - Multi-Stage Docker Build für optimierte Images
+
 Unabhängig vom Betriebsmodell bleibt NovaCore:
 - **datensouverän**
 - **vollständig kontrollierbar**
 - **ohne Vendor-Lock-in**
 
-> „Local“ bedeutet bei NovaCore **kontrolliert betrieben** – nicht „Desktop-Anwendung“.
+> „Local" bedeutet bei NovaCore **kontrolliert betrieben** – nicht „Desktop-Anwendung".
 
 ---
 
 ## 📋 Features
 
-### 🤖 Agent Chunker
-Intelligenter Agent zur automatischen Wissenserschließung:
-
-- Google-Suche basierend auf einer Fragestellung
-- Automatischer Download & Parsing von Webseiten
-- KI-gestützte Chunk-Erstellung
-- Direkte Integration in die RAG-Pipeline
-- Wiederverwendbare Chunk-Strategien:
-  - Gesetzestexte
-  - Markdown
-  - strukturierte Dokumente
-
----
-
 ### 💬 RAG-basierter Chat
 Konversationen mit **echtem, prüfbarem Kontext**:
 
 - Antworten ausschließlich auf Basis eigener Dokumente
-- Transparente Quellenangaben unter jeder Antwort
-- Mehrere Chat-Profile je Use-Case
+- Transparente Quellenangaben mit URLs und Relevanz-Scores unter jeder Antwort
+- Mehrere Chat-Profile je Use-Case mit individueller Collection-, Prompt- und LLM-Zuordnung
+- **Streaming-Responses** via Server-Sent Events für Echtzeit-Ausgabe
+- **Persistente Chat-Sessions** – Gespräche speichern, laden und fortsetzen
+- **Demo-Fragen** pro Chat-Konfiguration für schnellen Einstieg
+- Konfigurierbarer TopK-Parameter und Temperatur pro Anfrage
 - **Performance Metrics**
   - Laufzeiten
-  - Token-Nutzung
-  - Retrieval-Qualität
-  - Chunk-Trefferquote
+  - Token-Nutzung (Input/Output)
+  - Retrieval-Qualität & Chunk-Trefferquote
 
 ---
 
-### 📄 Dokumentenverarbeitung
-Zentrale Wissensaufbereitung:
+### ✏️ Live Document Editor
+KI-gestützter WYSIWYG-Dokumenten-Editor:
 
-- Smart Document Chunking mit Pattern-Erkennung
-- Import aus:
-  - PDFs
-  - HTML
+- Echtzeit-HTML-Editor mit vollständiger Formatierungsleiste
+- Integrierter KI-Chat zur Dokumenterstellung und -bearbeitung
+- **Live-Editing**: Änderungen werden sichtbar einzeln angewendet – wie kollaboratives Editing
+- Strukturierte Dokumentoperationen (Sektionen ersetzen, einfügen, löschen, anhängen)
+- Session-Management – Dokumente speichern und laden
+- HTML-Export
+- Token-Statistiken und Nachrichten-Tracking
+
+---
+
+### 🤖 Agent Chunker
+Intelligenter Agent zur automatischen Wissenserschließung:
+
+- Web-Suche basierend auf einer Fragestellung (Google Search API, SerpApi)
+- Automatischer Download & Parsing von Webseiten
+- KI-gestützte Chunk-Erstellung
+- Direkte Integration in die RAG-Pipeline
+- Wiederverwendbare Chunk-Strategien:
+  - Gesetzestexte (Paragraphen, Artikel)
   - Markdown
-- **Notion-Plugin (bestehend)**
+  - Strukturierte Dokumente
+
+---
+
+### 📄 Dokumentenverarbeitung & Import
+Zentrale Wissensaufbereitung mit vielfältigen Import-Wegen:
+
+- **Smart Document Chunking** mit Pattern-Erkennung und KI-gestützter Segmentierung
+- **Import-Formate:**
+  - PDFs (via PdfPig)
+  - HTML (via HtmlAgilityPack)
+  - Markdown
+  - Plain Text
+- **Web-Chunker** – Einzelne Webseiten importieren mit automatischer Inhaltsextraktion
+- **Wikipedia-Chunker** – Wikipedia-Artikel mit sektionsbasiertem Chunking (Mehrsprachig)
+- **KI-basiertes Text-Chunking** – LLM-gestützte semantische Segmentierung mit Token-Management
+- **Notion-Plugin**
   - Direkter Import von Seiten & Datenbanken
-- Collections zur logischen Trennung von Wissensräumen
-- Grundlage für versioniertes & auditierbares RAG
+  - Content-Vorschau vor dem Import
+  - Kategorie-Management
+  - Konfigurierbare Workspace-Verbindungen
+- **Collections** zur logischen Trennung von Wissensräumen mit individueller Embedder-Zuordnung
+
+---
+
+### 🔌 REST API
+Programmatischer Zugriff auf NovaCore-Funktionalität:
+
+- **POST `/api/chat`** – Synchrone Chat-Anfrage mit RAG-Kontext
+- **POST `/api/chat_stream`** – Streaming-Chat via Server-Sent Events
+- **POST `/api/DocumentChunker/chunk`** – KI-gestütztes Dokumenten-Chunking (PDF, HTML, Text)
+- **API-Key-Authentifizierung** über `X-API-Key` Header
+- API pro Chat-Konfiguration aktivierbar/deaktivierbar
+- Temperatur-Steuerung und Source-Tracking
+
+---
+
+### 🔑 API-Key-Management
+Verwaltung von API-Schlüsseln für den REST-API-Zugriff:
+
+- Erstellen, Aktivieren und Deaktivieren von API-Keys
+- Optionales Ablaufdatum
+- Nutzungs-Tracking (letzter Zugriff)
+- Sichere Anzeige mit Schlüssel-Prefix (`nvc_`)
 
 ---
 
 ### 🛠️ Konfiguration & Management
+
+#### Prompt-Management
 - Prompt-Editor für System- & Agent-Prompts
+- **Prompt-Analyzer** – KI-gestützte Prompt-Generierung auf Basis von Collection-Inhalten
 - Analyse & Vergleich von Prompt-Varianten
-- LLM-Management:
-  - mehrere Modelle
-  - mehrere Provider
-- Vollständig konfigurierbare RAG-Pipelines
+
+#### LLM-Management
+- Mehrere Modelle und Provider gleichzeitig konfigurierbar
+- Modell-Browser mit Verfügbarkeitsprüfung je Provider
+- **Separate Embedding-Provider-Konfiguration** – unabhängig von Chat-LLMs
+
+#### Chat-Konfigurationen
+- Mehrere Chat-Profile mit individueller Collection-, Prompt- und LLM-Zuordnung
+- API-Freischaltung pro Chat
+- Demo-Fragen und Optionen-Panel konfigurierbar
+
+#### Collection-Management
+- Qdrant-Collections mit Punkt-Anzahl, Vektor-Dimensionen und Status
+- Individuelle Embedder-Zuordnung pro Collection
+- Content-Vorschau
 
 ---
 
-### 📈 Analytics & Observability
-- Laufzeit-Metriken
+### 📈 Analytics & Testing
+
+#### RAG-Debugger
+- Interaktives Test-Tool für RAG-Suchen
+- Parameter-Optimierung (TopK, Score-Threshold)
+- Direkte Ergebnis-Inspektion
+
+#### Vector-Search-Tester
+- Vektorsuche gegen Qdrant und ElasticSearch testen
+- Performance-Vergleich zwischen Backends
+
+#### Topic-Klassifikation
+- KI-gestützte Themenanalyse über Collections
+- Query-basierte oder allgemeine Themen-Extraktion
+
+#### Parser-Schema-Generator
+- KI-gestützte XPath-Parser-Erstellung für HTML-Strukturen
+- Schema-Test und Vorschau
+
+#### Metriken
+- Laufzeit-Metriken pro Anfrage
 - Token- & Kostenanalyse
 - Chunk-Verteilung & Qualitätsmetriken
-- Grundlage für Monitoring, Audits & Governance
+
+---
+
+### 🔐 Authentifizierung & Benutzerverwaltung
+- Cookie-basierte Authentifizierung mit konfigurierbarer Session-Dauer
+- **Benutzerverwaltung** – Benutzer anlegen, bearbeiten, aktivieren/deaktivieren
+- **Rollenbasierte Zugriffskontrolle (RBAC)** – Rollen zuweisen und verwalten
+- Login-Rate-Limiting zum Schutz vor Brute-Force
+- Last-Login-Tracking
 
 ---
 
 ## 🤖 LLM- & Provider-Unterstützung
 
+NovaCore unterstützt eine Vielzahl von LLM-Providern über eine einheitliche Provider-Abstraktion (`ILlmProvider`). Alle Provider unterstützen Chat, Streaming und Embedding.
+
 ### Lokale Modelle
 - **Ollama**
-  - Mistral
-  - Llama
-  - Embedding-Modelle (z. B. `nomic-embed-text`)
+  - Alle Ollama-kompatiblen Modelle (Mistral, Llama, Gemma, etc.)
+  - Lokale Embedding-Modelle (z. B. `nomic-embed-text`)
+- **Ollama Cloud** – Ollama-API über externe Endpunkte
 
 ### Cloud & API-basierte Modelle
-- **Claude API** ✅
-  - Hochwertige Analyse- & Reasoning-Fähigkeiten
-  - Optional für hybride Szenarien
-  - Vollständig in die Provider-Abstraktion integriert
+- **Claude API** (Anthropic) – Hochwertige Analyse- & Reasoning-Fähigkeiten
+- **Azure OpenAI** – Enterprise-OpenAI über Azure
+- **Google Gemini** – Google AI Modelle
+- **Mistral API** – Europäischer KI-Provider
+- **OpenRouter** – Zugang zu zahlreichen Modellen über eine API
+
+### Vektor-Datenbanken
+- **Qdrant** – Primäre Vektor-Datenbank mit Collection-Management
+- **ElasticSearch** – Alternative Vektor-Suche mit Dense-Vector-Support
+
+### Web-Suche
+- **Google Search API** – Direkte Google-Suche
+- **SerpApi** – Search Engine Results API
 
 ---
 
@@ -131,22 +231,28 @@ Zentrale Wissensaufbereitung:
 
 ### Backend & Architektur
 - **.NET 10.0**
-- **Entity Framework Core**
-- **PostgreSQL**
-- **Serilog**
+- **Entity Framework Core** (PostgreSQL via Npgsql)
+- **Serilog** (Logging)
 
 ### UI
-- **Blazor Server**
+- **Blazor Server** (Interactive Server Mode)
 - **Radzen Blazor Components**
 
 ### AI / RAG
-- **Ollama**
-- **Claude API**
+- **8 LLM-Provider** (Ollama, Claude, Azure OpenAI, Gemini, Mistral, OpenRouter, Ollama Cloud, ElasticRag)
 - **Qdrant** (Vector Database)
+- **ElasticSearch** (Vector Search)
 
 ### Parsing & Dokumente
-- **PdfPig**
-- **HtmlAgilityPack**
+- **PdfPig** (PDF-Extraktion)
+- **HtmlAgilityPack** (HTML-Parsing)
+- **Markdig** (Markdown-Rendering)
+- **OpenXml** (Office-Dokumente)
+
+### Infrastruktur
+- **Docker** & **Docker Compose**
+- **PostgreSQL 18**
+- **Qdrant**
 
 ---
 
@@ -173,11 +279,10 @@ NovaCore ist **von Grund auf Enterprise-ready konzipiert**.
 
 ### Architekturprinzipien
 - Saubere Trennung von UI, Services & Infrastruktur
-- Erweiterbar über Provider- & Agent-Pattern
-- Vorbereitet für:
-  - Rollenbasierte Zugriffskontrolle (RBAC)
-  - Multi-Tenant-Betrieb
-  - Skalierbare Background-Agenten
+- Erweiterbar über Provider- & Factory-Pattern
+- Rollenbasierte Zugriffskontrolle (RBAC)
+- API-Key-basierter Zugang für externe Systeme
+- Vorbereitet für Multi-Tenant-Betrieb
 
 ---
 
@@ -186,9 +291,9 @@ NovaCore ist **von Grund auf Enterprise-ready konzipiert**.
 ### Voraussetzungen
 
 1. .NET 10.0 SDK
-2. Ollama (z. B. `mistral-small3.1`, `nomic-embed-text`)
+2. PostgreSQL
 3. Qdrant
-4. PostgreSQL
+4. Ollama (optional, z. B. `mistral-small3.1`, `nomic-embed-text`)
 
 ---
 
@@ -199,19 +304,27 @@ git clone <repository-url>
 cd NovaCore/src
 dotnet restore
 dotnet run
-
-## docker compose - soon..
-
-## Setup SSL - soon..
 ```
+
+### Docker Compose
+
+```bash
+# Infrastruktur (PostgreSQL + Qdrant)
+cd infrastructure/Infra
+docker-compose up -d
+
+# Anwendung
+cd infrastructure/app
+docker-compose up -d
+```
+
+---
 
 ## 🧭 Roadmap / Coming Soon
 
 ### 🤖 LLM- & Provider-Erweiterungen
-- Erweiterte Unterstützung lokaler Ollama-Modelle
-- **Mistral API (EU)**
-- **OpenAI API**
-- Einheitliche Reminder- & Failover-Strategien pro Provider
+- **OpenAI API** (direkt)
+- Einheitliche Failover-Strategien pro Provider
 - Modell-Routing je Use-Case (Kosten, Latenz, Qualität)
 
 ---
@@ -221,7 +334,6 @@ dotnet run
 #### 🔄 Notion Plugin – Erweiterung
 - Inkrementelle Synchronisation (Delta-Updates)
 - Erkennung von Änderungen & Löschungen
-- Metadaten- & Property-Mapping
 - Versionierte RAG-Chunks
 - Hintergrund-Synchronisation über Agenten
 
@@ -243,23 +355,18 @@ dotnet run
   - Tickets, Kommentare & Beschreibungen
   - Projekt- & Label-basierte Wissensräume
 
-
 ---
 
 ### 🔐 Authentifizierung & Sicherheit
-- Allow-List-basierter lokaler Login
 - **Microsoft Entra ID**
 - **Keycloak (OIDC / SAML)**
-- Rollen- & Berechtigungssystem (RBAC)
-- Vorbereitung für Multi-Tenant-Betrieb
+- Multi-Tenant-Betrieb
 
 ---
 
 ### 🧠 Agenten & Automatisierung
 - Background-Agenten für zeitgesteuerte Jobs
 - Event-basierte Re-Indexierung
-- Konfigurierbare Pipelines:
-  - Fetch → Parse → Chunk → Embed → Store
 - Detaillierte Laufzeit- & Kostenmetriken pro Agent
 
 ---
@@ -269,6 +376,7 @@ dotnet run
 - Nachvollziehbare Quellenketten
 - Vorbereitung für Compliance- & Prüfanforderungen
 
+---
 
 ## 🌍 Vision
 
